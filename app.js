@@ -27,6 +27,7 @@ app.use(requestLogger);
 const options = {
   origin: [
     'http://localhost:3001',
+    'https://simoshina.moviebase.nomoredomains.xyz/',
   ],
   credentials: true,
 };
