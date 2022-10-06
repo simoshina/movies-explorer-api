@@ -63,9 +63,11 @@ module.exports.updateUserInfo = (req, res, next) => {
     new: true,
     runValidators: true,
   })
-    .then((user) => res.send(user))
+    .then((user) => res.send({ name: user.name, email: user.email }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.code === 11000) {
+        return next(new ConflictError('Емейл занят'));
+      } if (err.name === 'ValidationError') {
         return next(new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
       } if (err.name === 'CastError') {
         return next(new NotFoundError('Пользователь с указанным id не найден.'));
@@ -75,7 +77,6 @@ module.exports.updateUserInfo = (req, res, next) => {
 };
 
 module.exports.logout = (req, res, next) => {
-  res.clearCookie('token', { path: '/' });
-  res.redirect('signin');
+  res.clearCookie('token');
   return next();
 };

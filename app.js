@@ -15,14 +15,13 @@ const { limiter } = require('./constants/ratelimiter');
 const { PORT = 3000, NODE_ENV, MONGO_DB } = process.env;
 
 const app = express();
+app.use(requestLogger);
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(helmet());
 app.use(limiter);
 
 mongoose.connect(NODE_ENV === 'production' ? MONGO_DB : 'mongodb://127.0.0.1:27017/moviesdb');
-
-app.use(requestLogger);
 
 const options = {
   origin: [
